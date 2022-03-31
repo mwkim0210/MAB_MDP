@@ -1,0 +1,490 @@
+{
+    "generated_at": "2022-03-30T12:12:28+00:00",
+    "schema": "../../../schemas/summary.json",
+    "stage": {
+        "id": "sr:stage:123490",
+        "description": "Practice 3",
+        "scheduled": "2010-10-23T02:00:00+00:00",
+        "scheduled_end": "2010-10-23T03:00:00+00:00",
+        "type": "practice",
+        "status": "Not started",
+        "single_event": false,
+        "parents": [
+            {
+                "id": "sr:stage:123487",
+                "description": "Korean Grand Prix",
+                "scheduled": "2010-10-22T02:00:00+00:00",
+                "scheduled_end": "2010-10-26T08:00:00+00:00",
+                "type": "event",
+                "status": "Finished",
+                "single_event": false,
+                "venue": {
+                    "id": "sr:venue:1611",
+                    "name": "Korean International Circuit",
+                    "city": "Yeongam",
+                    "country": "Republic of Korea",
+                    "coordinates": "34.735373,126.412262",
+                    "country_code": "KOR",
+                    "length": 5621,
+                    "debut": 2010,
+                    "url_official": "http://www.f1korea.go.kr/",
+                    "curves_left": 11,
+                    "curves_right": 7,
+                    "laps": 55
+                },
+                "parents": [
+                    {
+                        "id": "sr:stage:121558",
+                        "description": "Formula 1",
+                        "scheduled": "2010-03-11T23:00:00+00:00",
+                        "scheduled_end": "2010-11-13T23:00:00+00:00",
+                        "type": "season",
+                        "single_event": false,
+                        "parents": [
+                            {
+                                "id": "sr:stage:7668",
+                                "description": "Formula 1",
+                                "type": "sport",
+                                "single_event": false
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "competitors": [
+            {
+                "id": "sr:competitor:6152",
+                "name": "Kubica, Robert",
+                "gender": "male",
+                "nationality": "Poland",
+                "country_code": "POL",
+                "result": {
+                    "fastest_lap_time": "1:37.354",
+                    "laps": 15,
+                    "position": 1,
+                    "status": "Finished",
+                    "car_number": 11
+                }
+            },
+            {
+                "id": "sr:competitor:7135",
+                "name": "Hamilton, Lewis",
+                "gender": "male",
+                "nationality": "Great Britain",
+                "country_code": "GBR",
+                "result": {
+                    "fastest_lap_time": "+0.048",
+                    "laps": 16,
+                    "position": 2,
+                    "status": "Finished",
+                    "car_number": 2
+                }
+            },
+            {
+                "id": "sr:competitor:4521",
+                "name": "Alonso, Fernando",
+                "gender": "male",
+                "nationality": "Spain",
+                "country_code": "ESP",
+                "result": {
+                    "fastest_lap_time": "+0.072",
+                    "laps": 15,
+                    "position": 3,
+                    "status": "Finished",
+                    "car_number": 8
+                }
+            },
+            {
+                "id": "sr:competitor:4536",
+                "name": "Webber, Mark",
+                "gender": "male",
+                "nationality": "Australia",
+                "country_code": "AUS",
+                "result": {
+                    "fastest_lap_time": "+0.087",
+                    "laps": 13,
+                    "position": 4,
+                    "status": "Finished",
+                    "car_number": 6
+                }
+            },
+            {
+                "id": "sr:competitor:5769",
+                "name": "Rosberg, Nico",
+                "gender": "male",
+                "nationality": "Germany",
+                "country_code": "DEU",
+                "result": {
+                    "fastest_lap_time": "+0.275",
+                    "laps": 12,
+                    "position": 5,
+                    "status": "Finished",
+                    "car_number": 4
+                }
+            },
+            {
+                "id": "sr:competitor:4533",
+                "name": "Massa, Felipe",
+                "gender": "male",
+                "nationality": "Brazil",
+                "country_code": "BRA",
+                "result": {
+                    "fastest_lap_time": "+0.601",
+                    "laps": 16,
+                    "position": 6,
+                    "status": "Finished",
+                    "car_number": 7
+                }
+            },
+            {
+                "id": "sr:competitor:4524",
+                "name": "Button, Jenson",
+                "gender": "male",
+                "nationality": "Great Britain",
+                "country_code": "GBR",
+                "result": {
+                    "fastest_lap_time": "+1.065",
+                    "laps": 15,
+                    "position": 7,
+                    "status": "Finished",
+                    "car_number": 1
+                }
+            },
+            {
+                "id": "sr:competitor:39412",
+                "name": "Hulkenberg, Nico",
+                "gender": "male",
+                "nationality": "Germany",
+                "country_code": "DEU",
+                "result": {
+                    "fastest_lap_time": "+1.147",
+                    "laps": 17,
+                    "position": 8,
+                    "status": "Finished",
+                    "car_number": 10
+                }
+            },
+            {
+                "id": "sr:competitor:4519",
+                "name": "Schumacher, Michael",
+                "gender": "male",
+                "nationality": "Germany",
+                "country_code": "DEU",
+                "result": {
+                    "fastest_lap_time": "+1.276",
+                    "laps": 12,
+                    "position": 9,
+                    "status": "Finished",
+                    "car_number": 3
+                }
+            },
+            {
+                "id": "sr:competitor:7138",
+                "name": "Sutil, Adrian",
+                "gender": "male",
+                "nationality": "Germany",
+                "country_code": "DEU",
+                "result": {
+                    "fastest_lap_time": "+1.278",
+                    "laps": 18,
+                    "position": 10,
+                    "status": "Finished",
+                    "car_number": 14
+                }
+            },
+            {
+                "id": "sr:competitor:40249",
+                "name": "Petrov, Vitaly",
+                "gender": "male",
+                "nationality": "Russia",
+                "country_code": "RUS",
+                "result": {
+                    "fastest_lap_time": "+1.314",
+                    "laps": 14,
+                    "position": 11,
+                    "status": "Finished",
+                    "car_number": 12
+                }
+            },
+            {
+                "id": "sr:competitor:4520",
+                "name": "Barrichello, Rubens",
+                "gender": "male",
+                "nationality": "Brazil",
+                "country_code": "BRA",
+                "result": {
+                    "fastest_lap_time": "+1.379",
+                    "laps": 16,
+                    "position": 12,
+                    "status": "Finished",
+                    "car_number": 9
+                }
+            },
+            {
+                "id": "sr:competitor:34522",
+                "name": "Buemi, Sebastien",
+                "gender": "male",
+                "nationality": "Switzerland",
+                "country_code": "CHE",
+                "result": {
+                    "fastest_lap_time": "+1.704",
+                    "laps": 21,
+                    "position": 13,
+                    "status": "Finished",
+                    "car_number": 16
+                }
+            },
+            {
+                "id": "sr:competitor:38259",
+                "name": "Kobayashi, Kamui",
+                "gender": "male",
+                "nationality": "Japan",
+                "country_code": "JPN",
+                "result": {
+                    "fastest_lap_time": "+1.791",
+                    "laps": 16,
+                    "position": 14,
+                    "status": "Finished",
+                    "car_number": 26
+                }
+            },
+            {
+                "id": "sr:competitor:36692",
+                "name": "Alguersuari, Jaime",
+                "gender": "male",
+                "nationality": "Spain",
+                "country_code": "ESP",
+                "result": {
+                    "fastest_lap_time": "+1.805",
+                    "laps": 21,
+                    "position": 15,
+                    "status": "Finished",
+                    "car_number": 17
+                }
+            },
+            {
+                "id": "sr:competitor:7610",
+                "name": "Vettel, Sebastian",
+                "gender": "male",
+                "nationality": "Germany",
+                "country_code": "DEU",
+                "result": {
+                    "fastest_lap_time": "+2.426",
+                    "laps": 9,
+                    "position": 16,
+                    "status": "Finished",
+                    "car_number": 5
+                }
+            },
+            {
+                "id": "sr:competitor:4534",
+                "name": "Heidfeld, Nick",
+                "gender": "male",
+                "nationality": "Germany",
+                "country_code": "DEU",
+                "result": {
+                    "fastest_lap_time": "+2.935",
+                    "laps": 17,
+                    "position": 17,
+                    "status": "Finished",
+                    "car_number": 22
+                }
+            },
+            {
+                "id": "sr:competitor:4998",
+                "name": "Liuzzi, Vitantonio",
+                "gender": "male",
+                "nationality": "Italy",
+                "country_code": "ITA",
+                "result": {
+                    "fastest_lap_time": "+4.237",
+                    "laps": 15,
+                    "position": 18,
+                    "status": "Finished",
+                    "car_number": 15
+                }
+            },
+            {
+                "id": "sr:competitor:4525",
+                "name": "Trulli, Jarno",
+                "gender": "male",
+                "nationality": "Italy",
+                "country_code": "ITA",
+                "result": {
+                    "fastest_lap_time": "+4.269",
+                    "laps": 15,
+                    "position": 19,
+                    "status": "Finished",
+                    "car_number": 18
+                }
+            },
+            {
+                "id": "sr:competitor:4842",
+                "name": "Glock, Timo",
+                "gender": "male",
+                "nationality": "Germany",
+                "country_code": "DEU",
+                "result": {
+                    "fastest_lap_time": "+4.499",
+                    "laps": 17,
+                    "position": 20,
+                    "status": "Finished",
+                    "car_number": 24
+                }
+            },
+            {
+                "id": "sr:competitor:7136",
+                "name": "Kovalainen, Heikki",
+                "gender": "male",
+                "nationality": "Finland",
+                "country_code": "FIN",
+                "result": {
+                    "fastest_lap_time": "+4.741",
+                    "laps": 19,
+                    "position": 21,
+                    "status": "Finished",
+                    "car_number": 19
+                }
+            },
+            {
+                "id": "sr:competitor:39986",
+                "name": "Di Grassi, Lucas",
+                "gender": "male",
+                "nationality": "Brazil",
+                "country_code": "BRA",
+                "result": {
+                    "fastest_lap_time": "+5.757",
+                    "laps": 19,
+                    "position": 22,
+                    "status": "Finished",
+                    "car_number": 25
+                }
+            },
+            {
+                "id": "sr:competitor:39413",
+                "name": "Senna, Bruno",
+                "gender": "male",
+                "nationality": "Brazil",
+                "country_code": "BRA",
+                "result": {
+                    "fastest_lap_time": "+6.063",
+                    "laps": 19,
+                    "position": 23,
+                    "status": "Finished",
+                    "car_number": 21
+                }
+            },
+            {
+                "id": "sr:competitor:6078",
+                "name": "Yamamoto, Sakon",
+                "gender": "male",
+                "nationality": "Japan",
+                "country_code": "JPN",
+                "result": {
+                    "fastest_lap_time": "+6.526",
+                    "laps": 20,
+                    "position": 24,
+                    "status": "Finished",
+                    "car_number": 20
+                }
+            },
+            {
+                "id": "sr:competitor:45088",
+                "name": "D'Ambrosio, Jerome",
+                "gender": "male",
+                "nationality": "Belgium",
+                "country_code": "BEL",
+                "result": {
+                    "status": "Did not start"
+                }
+            }
+        ],
+        "teams": [
+            {
+                "id": "sr:competitor:7137",
+                "name": "Force India",
+                "gender": "male",
+                "nationality": "Great Britain",
+                "country_code": "GBR"
+            },
+            {
+                "id": "sr:competitor:4514",
+                "name": "McLaren",
+                "gender": "male",
+                "nationality": "Great Britain",
+                "country_code": "GBR"
+            },
+            {
+                "id": "sr:competitor:4515",
+                "name": "Alfa Romeo Racing",
+                "gender": "male",
+                "nationality": "Switzerland",
+                "country_code": "CHE"
+            },
+            {
+                "id": "sr:competitor:41126",
+                "name": "Caterham",
+                "gender": "male",
+                "nationality": "Great Britain",
+                "country_code": "GBR"
+            },
+            {
+                "id": "sr:competitor:41127",
+                "name": "Mercedes",
+                "gender": "male",
+                "nationality": "Germany",
+                "country_code": "DEU"
+            },
+            {
+                "id": "sr:competitor:41128",
+                "name": "Hispania Racing",
+                "gender": "male",
+                "nationality": "Spain",
+                "country_code": "ESP"
+            },
+            {
+                "id": "sr:competitor:4978",
+                "name": "Red Bull Racing",
+                "gender": "male",
+                "nationality": "Austria",
+                "country_code": "AUT"
+            },
+            {
+                "id": "sr:competitor:39415",
+                "name": "Manor Racing",
+                "gender": "male",
+                "nationality": "Great Britain",
+                "country_code": "GBR"
+            },
+            {
+                "id": "sr:competitor:5771",
+                "name": "Alphatauri",
+                "gender": "male",
+                "nationality": "Italy",
+                "country_code": "ITA"
+            },
+            {
+                "id": "sr:competitor:4510",
+                "name": "Ferrari",
+                "gender": "male",
+                "nationality": "Italy",
+                "country_code": "ITA"
+            },
+            {
+                "id": "sr:competitor:4511",
+                "name": "Williams",
+                "gender": "male",
+                "nationality": "Great Britain",
+                "country_code": "GBR"
+            },
+            {
+                "id": "sr:competitor:4512",
+                "name": "Alpine F1 Team",
+                "gender": "male",
+                "nationality": "France",
+                "country_code": "FRA"
+            }
+        ]
+    }
+}

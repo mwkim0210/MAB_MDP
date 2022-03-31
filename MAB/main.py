@@ -2,10 +2,13 @@ import agent
 import environment
 import policy
 import bandit
+import datetime  # debugging
+
+t1 = datetime.datetime.now()  # debugging
 
 bandit = bandit.F1Bandit()
-n_trials = 1000
-n_experiments = 1000
+n_trials = 10
+n_experiments = 10
 
 # This is an example.
 agents = [agent.Agent(bandit, policy.RandomPolicy()),
@@ -17,3 +20,6 @@ agents = [agent.Agent(bandit, policy.RandomPolicy()),
 env = environment.Environment(bandit, agents)
 scores, optimal = env.run(n_trials, n_experiments)
 env.plot_results(scores, optimal)
+
+t2 = datetime.datetime.now()  # debugging
+print(t2-t1)  # debugging

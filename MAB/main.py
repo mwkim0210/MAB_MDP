@@ -7,8 +7,8 @@ import datetime  # debugging
 t1 = datetime.datetime.now()  # debugging
 
 bandit = bandit.F1Bandit()
-n_trials = 10
-n_experiments = 10
+n_trials = 2500
+n_experiments = 500
 
 # This is an example.
 agents = [agent.Agent(bandit, policy.RandomPolicy()),

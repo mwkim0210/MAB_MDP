@@ -53,5 +53,5 @@ class Environment(object):
         plt.legend(self.agents, loc=4)
         sns.despine()
         plt.savefig('test.png')
-        # plt.show()
+        plt.show()
 

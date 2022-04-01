@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import scipy.stats as stats
+import datetime
 
 
 class Environment(object):
@@ -52,6 +53,6 @@ class Environment(object):
         plt.xlabel('Time Step')
         plt.legend(self.agents, loc=4)
         sns.despine()
-        plt.savefig('test.png')
+        plt.savefig('fig'+datetime.datetime.now().strftime("%Y%m%d_%H_%M_%S")+'.png')
         plt.show()
 

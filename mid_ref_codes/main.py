@@ -2,11 +2,11 @@ import agent
 import environment
 import policy
 
-bandit = agent.HorseBandit(mode='dividend')
+bandit = agent.HorseBandit(mode='winloss')
 # n_trials = 2500
-n_trials = 100
+n_trials = 2500
 # n_experiments = 2500
-n_experiments = 100
+n_experiments = 2500
 
 agents = [agent.Agent(bandit, policy.RandomPolicy()),
           agent.Agent(bandit, policy.EpsilonGreedyPolicy(.01)),

@@ -52,4 +52,5 @@ class Environment(object):
         plt.xlabel('Time Step')
         plt.legend(self.agents, loc=4)
         sns.despine()
+        plt.savefig('fig_e_greedy.png')
         plt.show()

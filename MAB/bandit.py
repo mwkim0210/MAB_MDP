@@ -12,9 +12,11 @@ class F1Bandit(object):
         self.counter = 0
         self.data = race_loader.load_race_data()  # self.data contains all Grand Prix infos(FPs, Q, Race)
         self.drivers = race_loader.load_drivers()
+        self.data_list = list(self.data)
 
     def reset(self):
         self.counter = 0
+        np.random.shuffle(self.data_list)
 
     def pull(self, action):
         pass
@@ -26,19 +28,22 @@ class F1Bandit(object):
             is_optimal (bool): True (if you win) or False (otherwise).
         """
         session_list = ['FP1', 'FP2', 'FP3', 'Q', 'Race']
-        data_list = list(self.data)
+        point_list = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1]
+        # data_list = list(self.data)
         gp_idx = self.counter // 5
         session_idx = self.counter % 5
-        session = self.data[data_list[gp_idx % len(self.data)]][session_list[session_idx]]
+        session = self.data[self.data_list[gp_idx % len(self.data)]][session_list[session_idx]]
         result = 0
         for i in range(self.nA):
             if self.drivers[str(action)]['name'] == session[i]['name']:
                 result = i + 1
                 break
         self.counter += 1
+
+        reward = point_list[result-1] if result <= 10 else 0
         if THRESHOLD >= result > 0:
-            return 10, True
-        return 0, False
+            return reward, True
+        return reward, False
         # return reward, is_optimal
 
 

@@ -139,6 +139,7 @@ def load_drivers():
 
 
 def main():
+    os.makedirs('data', exist_ok=True)
     get_all_seasons()  # Get all seasons' info available at API
     seasons_dict = seasons2dict()  # change .json from the line above to dict
     id_2010 = seasons_dict['2010']  # id_2010: id value of 2010 season

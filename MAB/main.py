@@ -3,7 +3,7 @@ import environment
 import policy
 import bandit
 
-bandit = bandit.F1Bandit(reward_policy_ver=1)
+bandit = bandit.F1Bandit(reward_policy_ver=3)
 n_trials = 2500
 n_experiments = 2500
 
@@ -27,7 +27,6 @@ length = len(optimal)
 i = 0
 for i in range(0, length, 100):
     print(f"{i:^4}{optimal[i][0]:^20}{optimal[i][1]:^20}{optimal[i][2]:^20}{optimal[i][3]:^20}{optimal[i][4]:^20}")
-
 print(f"{length-1:^4}{optimal[length-1][0]:^20}{optimal[length-1][1]:^20}{optimal[length-1][2]:^20}{optimal[length-1][3]:^20}{optimal[length-1][4]:^20}")
 
 env.plot_results(scores, optimal)

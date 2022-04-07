@@ -62,6 +62,27 @@ class F1Bandit(object):
             if THRESHOLD >= result > 0:
                 return reward, True
             return reward, False
+
+        elif self.reward_policy == 3:
+            point_list = [25, 18, 15, 12, 10, 0, 0, 0, 0, 0]
+            # data_list = list(self.data)
+            gp_idx = self.counter // 5
+            session_idx = self.counter % 5
+            session = self.data[self.data_list[gp_idx % len(self.data)]][session_list[session_idx]]
+            result = 0
+            for i in range(self.nA):
+                if self.drivers[str(action)]['name'] == session[i]['name']:
+                    result = i + 1
+                    break
+            self.counter += 1
+
+            reward = point_list[result-1] if result <= 10 else 0
+
+            if THRESHOLD >= result > 0:
+                return reward, True
+            return reward, False
+
+        return 0, False
         # return reward, is_optimal
 
 

@@ -55,7 +55,7 @@ class GridworldEnv(discrete.DiscreteEnv):
 
             # We're stuck in a terminal state
             if is_done(s):
-                P[s][UP] = [(3.0, s, reward, True)]
+                P[s][UP] = [(1.0, s, reward, True)]
                 P[s][RIGHT] = [(1.0, s, reward, True)]
                 P[s][DOWN] = [(1.0, s, reward, True)]
                 P[s][LEFT] = [(1.0, s, reward, True)]

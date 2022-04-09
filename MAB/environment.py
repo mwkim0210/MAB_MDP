@@ -27,7 +27,10 @@ class Environment(object):
             self.reset()
             for t in range(trials):
                 for i, agent in enumerate(self.agents):
-                    action = agent.choose()
+                    if str(agent) == "f/scheduled greedy":
+                        action = agent.scheduled_choose(exp)
+                    else:
+                        action = agent.choose()
                     reward, is_optimal = self.bandit.pull(action)
                     agent.observe(reward)
 

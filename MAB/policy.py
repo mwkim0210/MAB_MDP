@@ -23,6 +23,27 @@ class EpsilonGreedyPolicy:
         return f'\u03B5-greedy (\u03B5={self.epsilon})'
 
 
+class ScheduledEpsilonGreedy(object):
+    def __init__(self, epsilon=0.1, decay_rate=0.002):
+        self.epsilon = epsilon
+        self.decay_rate = decay_rate
+
+    def __str__(self):
+        return "scheduled greedy"
+
+    def __repr__(self):
+        return "scheduled \u03B5-greedy"
+
+    def choose(self, agent, exp_n):
+        epsilon = self.epsilon * np.exp(- self.decay_rate * exp_n)
+        if np.random.random() < epsilon:
+            return np.random.choice(len(agent.value_estimates))
+        else:
+            best_action = np.argmax(agent.value_estimates)
+            tie = np.where(agent.value_estimates == agent.value_estimates[best_action])[0]
+            return np.random.choice(tie)
+
+
 class GreedyPolicy(EpsilonGreedyPolicy):
     """
     The Greedy policy only takes the best apparent action, with ties broken by
@@ -73,7 +94,9 @@ class UCBPolicy:
         return 'UCB (c={})'.format(self.c)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     p1 = EpsilonGreedyPolicy(1)
     p2 = RandomPolicy()
     p3 = UCBPolicy(1)
+    p4 = ScheduledEpsilonGreedy()
+    print(str(p4))

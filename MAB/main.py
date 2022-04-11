@@ -14,7 +14,7 @@ p4 = policy.UCBPolicy(1)
 p5 = policy.UCBPolicy(2)
 p6 = policy.ScheduledEpsilonGreedy()
 
-policy_list = [p3]
+policy_list = [p1, p6, p3, p4, p5]
 
 agents = [agent.Agent(bandit, policy_model) for policy_model in policy_list]
 """

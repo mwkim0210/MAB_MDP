@@ -24,12 +24,12 @@ class Environment(object):
 
         for exp in range(experiments):
             # print(f'Experiments {exp+1}/{experiments}', end='\r', flush=True)
-            print(f'Experiment {exp+1}')
+            # print(f'Experiment {exp+1}')
             self.reset()
             for t in range(trials):
                 for i, agent in enumerate(self.agents):
                     if str(agent) == "f/scheduled greedy":
-                        action = agent.scheduled_choose(exp)
+                        action = agent.scheduled_choose(t)
                     else:
                         action = agent.choose()
                     reward, is_optimal = self.bandit.pull(action)

@@ -24,6 +24,7 @@ class Environment(object):
 
         for exp in range(experiments):
             # print(f'Experiments {exp+1}/{experiments}', end='\r', flush=True)
+            print(f'Experiment {exp+1}')
             self.reset()
             for t in range(trials):
                 for i, agent in enumerate(self.agents):

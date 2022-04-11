@@ -35,7 +35,11 @@ class ScheduledEpsilonGreedy(object):
         return "scheduled \u03B5-greedy"
 
     def choose(self, agent, exp_n):
-        epsilon = self.epsilon * np.exp(- self.decay_rate * exp_n)
+        # epsilon = self.epsilon * np.exp(- self.decay_rate * exp_n)
+        if exp_n < 500:
+            epsilon = self.epsilon
+        else:
+            epsilon = self.epsilon / 10
         if np.random.random() < epsilon:
             return np.random.choice(len(agent.value_estimates))
         else:

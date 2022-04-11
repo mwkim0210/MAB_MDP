@@ -181,6 +181,8 @@ def main():
     print(np.reshape(np.argmax(policy, axis=1), env.shape))
     print("")
 
+    np.set_printoptions(precision=2)
+
     print("Reshaped Grid Value Function:")
     print(v.reshape(env.shape))
     print("")

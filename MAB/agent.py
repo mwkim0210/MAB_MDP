@@ -23,12 +23,12 @@ class Agent:
         self.last_action = action
         return action
 
-    def scheduled_choose(self, exp_n):
+    def scheduled_choose(self, trial_n):
         """
         Choose epsilon value depending on the number of experiments chosen previously
-        exp_n: number of experiments done previously
+        trial_n: number of trialss done previously
         """
-        action = self.policy.choose(self, exp_n)
+        action = self.policy.choose(self, trial_n)
         self.last_action = action
         return action
 

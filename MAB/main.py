@@ -4,8 +4,8 @@ import policy
 import bandit
 
 bandit = bandit.F1Bandit(reward_policy_ver=3)
-n_trials = 2500
-n_experiments = 2500
+n_trials = 1000
+n_experiments = 1000
 
 p1 = policy.RandomPolicy()
 p2 = policy.EpsilonGreedyPolicy(.01)

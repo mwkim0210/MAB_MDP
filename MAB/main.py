@@ -14,28 +14,37 @@ p4 = policy.UCBPolicy(1)
 p5 = policy.UCBPolicy(2)
 p6 = policy.ScheduledEpsilonGreedy()
 
+policy_list = [p3]
+
+agents = [agent.Agent(bandit, policy_model) for policy_model in policy_list]
+"""
 agents = [agent.Agent(bandit, p1),
           agent.Agent(bandit, p2),
           agent.Agent(bandit, p3),
           agent.Agent(bandit, p4),
           agent.Agent(bandit, p5),
           agent.Agent(bandit, p6)]
-
+"""
 env = environment.Environment(bandit, agents)
 scores, optimal = env.run(n_trials, n_experiments)
-"""
-print(f"{'idx':^4}{str(p1):^18}{str(p2):^18}{str(p3):^18}{str(p4):^18}{str(p5):^18}")
-length = len(optimal)
+
+print(f"{'idx':^4}", end="")
+for policy in policy_list:
+    print(f"{str(policy):^18}", end="")
+print("")
 i = 0
-for i in range(0, length, 100):
-    print(f"{i:^4}{optimal[i][0]:^18}{optimal[i][1]:^18}{optimal[i][2]:^18}{optimal[i][3]:^18}{optimal[i][4]:^18}")
-print(f"{length-1:^4}{optimal[length-1][0]:^18}{optimal[length-1][1]:^18}{optimal[length-1][2]:^18}{optimal[length-1][3]:^18}{optimal[length-1][4]:^18}")
-"""
-print(f"{'idx':^4}{str(p1):^18}{str(p2):^18}{str(p3):^18}{str(p4):^18}{str(p5):^18}{str(p6):^18}")
 length = len(optimal)
-i = 0
+policy_num = len(policy_list)
 for i in range(0, length, 100):
-    print(f"{i:^4}{optimal[i][0]:^18}{optimal[i][1]:^18}{optimal[i][2]:^18}{optimal[i][3]:^18}{optimal[i][4]:^18}{optimal[i][5]:^18}")
-print(f"{length-1:^4}{optimal[length-1][0]:^18}{optimal[length-1][1]:^18}{optimal[length-1][2]:^18}{optimal[length-1][3]:^18}{optimal[length-1][4]:^18}{optimal[length-1][5]:^18}")
-# """
+    print(f"{i:^4}", end="")
+    for j in range(0, policy_num):
+        print(f"{optimal[i][j]:^18}", end="")
+        # print(f"{i:^4}{optimal[i][0]:^18}{optimal[i][1]:^18}{optimal[i][2]:^18}{optimal[i][3]:^18}{optimal[i][4]:^18}")
+    print("")
+
+print(f"{length-1:^4}", end="")
+for j in range(0, policy_num):
+    print(f"{optimal[length-1][j]:^18}", end="")
+
+
 env.plot_results(scores, optimal)

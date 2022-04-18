@@ -28,6 +28,7 @@ agents = [agent.Agent(bandit, p1),
 env = environment.Environment(bandit, agents)
 scores, optimal = env.run(n_trials, n_experiments)
 
+# print results
 print(f"{'idx':^4}", end="")
 for policy in policy_list:
     print(f"{str(policy):^18}", end="")

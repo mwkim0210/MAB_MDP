@@ -30,7 +30,7 @@ def policy_eval(policy, env, discount_factor=1., theta=1e-8):
             v = 0
             for action, action_prob in enumerate(policy[state]):
                 for state_prob, next_state, reward, done in env.P[state][action]:
-                    # action_prob = pi(a|s), state_prob = p(s',r|s,a)
+                    # action_prob: pi(a|s), state_prob: p(s',r|s,a)
                     v += action_prob * state_prob * (reward + discount_factor * V[next_state])
             delta = max(delta, np.abs(v - V[state]))
             V[state] = v  # update value function, update outside the loop
@@ -66,14 +66,14 @@ def policy_iter(env, policy_eval_fn=policy_eval, discount_factor=1.):
     # RL lecture 5 p.19
     while True:
         policy_stable = True
-        V = policy_eval(policy, env, discount_factor)
+        V = policy_eval_fn(policy, env, discount_factor)
         for state in range(env.nS):
-            # current_action = a, policy[state] = pi(s)
+            # current_action: a, policy[state]: pi(s)
             current_action = np.argmax(policy[state])
             action_values = np.zeros(env.nA)
             for action in range(env.nA):
                 for state_prob, next_state, reward, done in env.P[state][action]:
-                    # state_prob = p(s',r|s,a)
+                    # state_prob: p(s',r|s,a)
                     action_values[action] += state_prob * (reward + discount_factor * V[next_state])
             best_action = np.argmax(action_values)
             if current_action != best_action:
@@ -136,6 +136,15 @@ def value_iteration(env, theta=0.0001, discount_factor=1.0):
 
         if delta < theta:
             break
+
+    # Output a deterministic policy pi
+    for state in range(env.nS):
+        action_values = np.zeros(env.nA)
+        for action in range(env.nA):
+            for state_prob, next_state, reward, done in env.P[state][action]:
+                action_values[action] += state_prob * (reward + discount_factor * V[next_state])
+        best_action = np.argmax(action_values)
+        policy[state, best_action] = 1.0
 
     ###
     

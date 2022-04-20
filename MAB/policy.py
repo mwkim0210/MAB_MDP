@@ -88,6 +88,9 @@ class UCBPolicy:
         exploration[np.isnan(exploration)] = 0
         exploration = np.power(exploration, 1/self.c)
 
+        agent.t += 1
+        exploration[np.isinf(exploration)] = 10000000
+
         q = agent.value_estimates + exploration
         best_action = np.argmax(q)
         tie = np.where(q == q[best_action])[0]

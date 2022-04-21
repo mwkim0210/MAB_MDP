@@ -148,7 +148,6 @@ def main():
     # Get all race summaries from API
     for key, value in season_dict_2010.items():
         get_stage_summary(value)
-        time.sleep(2)
 
     session_dict = get_all_sessions(season_dict_2010)
     with open('session_info.json', 'w') as f:

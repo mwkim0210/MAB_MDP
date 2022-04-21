@@ -27,13 +27,14 @@ def policy_eval(policy, env, discount_factor=1., theta=1e-8):
     while True:
         delta = 0
         for state in range(env.nS):
-            v = 0
+            v = V[state]
+            temp = 0
             for action, action_prob in enumerate(policy[state]):
                 for state_prob, next_state, reward, done in env.P[state][action]:
                     # action_prob: pi(a|s), state_prob: p(s',r|s,a)
-                    v += action_prob * state_prob * (reward + discount_factor * V[next_state])
+                    temp += action_prob * state_prob * (reward + discount_factor * V[next_state])
+            V[state] = temp
             delta = max(delta, np.abs(v - V[state]))
-            V[state] = v  # update value function, update outside the loop
 
         if delta < theta:
             break
@@ -60,8 +61,7 @@ def policy_iter(env, policy_eval_fn=policy_eval, discount_factor=1.):
         V (numpy list): V is the value function for the optimal policy.
     """
     # start with a random policy
-    policy = np.ones([env.nS, env.nA]) / env.nA  # ????? previous: policy = np.zeros() instead of np.ones
-
+    policy = np.ones([env.nS, env.nA]) / env.nA
     ###
     # RL lecture 5 p.19
     while True:
@@ -78,7 +78,7 @@ def policy_iter(env, policy_eval_fn=policy_eval, discount_factor=1.):
             best_action = np.argmax(action_values)
             if current_action != best_action:
                 policy_stable = False
-                policy[state] = np.eye(env.nA)[best_action]
+            policy[state] = np.eye(env.nA)[best_action]
 
         if policy_stable:
             break
@@ -130,7 +130,7 @@ def value_iteration(env, theta=0.0001, discount_factor=1.0):
             for action in range(env.nA):
                 for state_prob, next_state, reward, done in env.P[state][action]:
                     action_values[action] += state_prob * (reward + discount_factor * V[next_state])
-                    V[state] = np.max(action_values)
+            V[state] = np.max(action_values)
 
             delta = max(delta, np.abs(v - V[state]))
 

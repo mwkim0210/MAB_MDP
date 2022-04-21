@@ -1,5 +1,6 @@
 import numpy as np
 from gridworld import GridworldEnv
+import time
 
 
 def policy_eval(policy, env, discount_factor=1., theta=1e-8):
@@ -153,10 +154,12 @@ def value_iteration(env, theta=0.0001, discount_factor=1.0):
 
 
 def main():
+    discount_factor = 0.0
+
     print('--------Policy evaluation--------')
     env = GridworldEnv()
     uniform_policy = np.ones([env.nS, env.nA])/env.nA
-    v = policy_eval(uniform_policy, env)
+    v = policy_eval(uniform_policy, env, discount_factor)
     
     v = v.reshape(env.shape)
     print(v)
@@ -164,8 +167,11 @@ def main():
     print('---------------------------------')
 
     print('--------Policy iteration---------')
-    
-    policy, v = policy_iter(env)
+
+    start = time.time()
+    policy, v = policy_iter(env, discount_factor=discount_factor)
+    policy_iter_time = time.time() - start
+
     print("Policy Probability Distribution:")
     print(policy)
     print("")
@@ -181,7 +187,10 @@ def main():
     print('---------------------------------')
 
     print('--------Value iteration---------')
-    policy, v = value_iteration(env)
+
+    start = time.time()
+    policy, v = value_iteration(env, discount_factor=discount_factor)
+    value_iter_time = time.time() - start
 
     print("Policy Probability Distribution:")
     print(policy)
@@ -198,6 +207,9 @@ def main():
     print("")
 
     print('---------------------------------')
+
+    print(f"Policy Iteration Converge time: {policy_iter_time}")
+    print(f"Value Iteration Converge time: {value_iter_time}")
 
 
 if __name__ == '__main__':

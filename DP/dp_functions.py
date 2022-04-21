@@ -54,7 +54,7 @@ def policy_iter(env, policy_eval_fn=policy_eval, discount_factor=1.):
         env: The OpenAI environment.
         policy_eval_fn: Policy Evaluation function that takes 3 arguments:
             policy, env, discount_factor.
-        discount_factor: gamma discount factor.
+        discount_factor:test gamma discount factor.
 
     Returns -> (policy, V):
         policy (2d numpy list): a matrix of shape [S, A] where each state s contains a valid probability distribution over actions.
@@ -77,6 +77,7 @@ def policy_iter(env, policy_eval_fn=policy_eval, discount_factor=1.):
                     action_values[action] += state_prob * (reward + discount_factor * V[next_state])
             best_action = np.argmax(action_values)
             if current_action != best_action:
+                # print(state)
                 policy_stable = False
             policy[state] = np.eye(env.nA)[best_action]
 

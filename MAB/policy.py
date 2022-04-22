@@ -108,6 +108,42 @@ class UCBPolicy:
         return 'UCB (c={})'.format(self.c)
 
 
+class ScheduledUCBPolicy(object):
+    def __init__(self, c=1, ver=1):
+        self.c = c  # initial c (degree of exploration)
+        self.ver = ver
+
+    def choose(self, agent):
+        trial_n = np.sum(agent.action_attempts)
+        if self.ver == 1:
+            c = self.c * np.exp(- 0.002 * trial_n)
+        elif self.ver == 2:
+            if trial_n > 500:
+                c = 3
+            else:
+                c = 1
+        else:
+            c = self.c
+        exploration = np.log(agent.t + 1) / agent.action_attempts
+        exploration[np.isnan(exploration)] = 0
+        exploration = np.power(exploration, 1 / c)
+
+        agent.t += 1
+        exploration[np.isinf(exploration)] = 10000000
+
+        q = agent.value_estimates + exploration
+        best_action = np.argmax(q)
+        tie = np.where(q == q[best_action])[0]
+
+        return np.random.choice(tie)
+
+    def __str__(self):
+        return 'Scheduled UCB'
+
+    def __repr__(self):
+        return 'Scheduled UCB'
+
+
 if __name__ == "__main__":
     p1 = EpsilonGreedyPolicy(1)
     p2 = RandomPolicy()

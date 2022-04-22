@@ -39,13 +39,13 @@ policy_num = len(policy_list)
 for i in range(0, length, 100):
     print(f"{i:^4}", end="")
     for j in range(0, policy_num):
-        print(f"{optimal[i][j]:^18}", end="")
+        print(f"{optimal[i][j]:^18.3f}", end="")
         # print(f"{i:^4}{optimal[i][0]:^18}{optimal[i][1]:^18}{optimal[i][2]:^18}{optimal[i][3]:^18}{optimal[i][4]:^18}")
     print("")
 
 print(f"{length-1:^4}", end="")
 for j in range(0, policy_num):
-    print(f"{optimal[length-1][j]:^18}", end="")
+    print(f"{optimal[length-1][j]:^18.3f}", end="")
 
 
 env.plot_results(scores, optimal)

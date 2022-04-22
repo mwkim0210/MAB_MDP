@@ -61,12 +61,14 @@ def policy_iter(env, policy_eval_fn=policy_eval, discount_factor=1.):
         policy (2d numpy list): a matrix of shape [S, A] where each state s contains a valid probability distribution over actions.
         V (numpy list): V is the value function for the optimal policy.
     """
+    # iter_flag = 0  # check number of iterations
     # start with a random policy
     policy = np.ones([env.nS, env.nA]) / env.nA
     ###
     # RL lecture 5 p.19
     # while True:
     for i in range(1000):
+        # iter_flag += 1
         policy_stable = True
         V = policy_eval_fn(policy, env, discount_factor)
         for state in range(env.nS):
@@ -84,7 +86,8 @@ def policy_iter(env, policy_eval_fn=policy_eval, discount_factor=1.):
             policy[state] = np.eye(env.nA)[best_action]
 
         if policy_stable:
-            break
+            # print(f"{iter_flag=}")
+            return policy, V
 
     ###
 
@@ -106,26 +109,13 @@ def value_iteration(env, theta=0.0001, discount_factor=1.0):
     Returns:
         A tuple (policy, V) of the optimal policy and the optimal value function.        
     """
-
+    # iter_flag = 0  # check number of iterations
     policy = np.zeros([env.nS, env.nA])
     V = np.zeros(env.nS)
     ###
     # RL lecture 5 p.26
-    """
     while True:
-        delta = 0
-        for state in range(env.nS):
-            v = 0
-            action_values = np.zeros(env.nA)
-            for action in range(env.nA):
-                for state_prob, next_state, reward, done in env.P[state][action]:
-                    action_values[action] += state_prob * (reward + discount_factor * V[next_state])
-                    v = np.max(action_values)
-
-            delta = max(delta, np.abs(v - V[state]))
-            V[state] = v  # update outside the loop
-    """
-    while True:
+        # iter_flag += 1
         delta = 0
         for state in range(env.nS):
             v = V[state]
@@ -138,6 +128,7 @@ def value_iteration(env, theta=0.0001, discount_factor=1.0):
             delta = max(delta, np.abs(v - V[state]))
 
         if delta < theta:
+            # print(f"{iter_flag=}")
             break
 
     # Output a deterministic policy pi
@@ -180,6 +171,8 @@ def main():
     print("Reshaped Grid Policy (0=up, 1=right, 2=down, 3=left):")
     print(np.reshape(np.argmax(policy, axis=1), env.shape))
     print("")
+
+    np.set_printoptions(precision=2)
 
     print("Reshaped Grid Value Function:")
     print(v.reshape(env.shape))

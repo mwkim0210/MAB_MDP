@@ -156,7 +156,7 @@ class GridworldEnv(discrete.DiscreteEnv):
 
             #######
 
-            if self.s == s:
+            if s == self.s:
                 output = " x "
             elif s == self.terminal_state:
                 output = " T "

@@ -154,7 +154,7 @@ def value_iteration(env, theta=0.0001, discount_factor=1.0):
 
 
 def main():
-    discount_factor = 0.0
+    discount_factor = 1.0
 
     print('--------Policy evaluation--------')
     env = GridworldEnv()

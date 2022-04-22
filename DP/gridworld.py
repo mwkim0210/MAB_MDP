@@ -24,29 +24,37 @@ class GridworldEnv(discrete.DiscreteEnv):
           P[s][a] == [(probability, next state, reward, done), ...]
         (**) list or array of length nS
         """
+        x = 6
+        y = 44
+        id_x = x
+        id_y = y
+        width = 8 + x % 4
+        height = 8 + y % 4
+        self.width = width
+        self.height = height
+        init_state = ((x + y) % 3, (x - y) % 3)
+        init_state = width * init_state[1] + init_state[0]
+
+        terminal_state = (width - 1 - (x - y) % 3, height - 1 - (x + y) % 3)
+        terminal_state = width * terminal_state[1] + terminal_state[0]
+
+        # mine = [((x + y)**2 % width, (x - y)**2 % height), (x**4 % width, y ** 4 % height), ((2022 - y) % width, (2022 - x) % height)]
+        mine = [(x + y) ** 2 % width + width * ((x - y) ** 2 % height), x ** 4 % width + width * (y ** 4 % height),
+                (2022 - y) % width + width * ((2022 - x) % height)]
+
+        self.init_state = init_state
+        self.mine = mine
+        self.terminal_state = terminal_state
+        # print(self.init_state, self.mine, self.terminal_state, self.width, self.height)
+
         if shape is None:
-            shape = [8, 10]
+            shape = [self.height, self.width]
         elif not isinstance(shape, (list, tuple)) or not len(shape) == 2:
             raise ValueError('shape argument must be a list/tuple of length 2')
 
         self.shape = shape
         nS = np.prod(shape)
         nA = 4
-
-        height = shape[0]
-        width = shape[1]
-
-        init_state = 10
-        mine = [4, 7, 45]
-        terminal_state = 42
-        # init_state = 12
-        # mine = [6, 8, 40]
-        # terminal_state = 60
-        """
-        init_state = 12
-        mine = [6, 8, 40]
-        terminal_state = 58
-        """
 
         P = dict()
         grid = np.arange(nS).reshape(shape)
@@ -58,7 +66,7 @@ class GridworldEnv(discrete.DiscreteEnv):
             y, x = it.multi_index
             P[s] = {a: [] for a in range(nA)}
 
-            is_done = lambda s: s == terminal_state
+            is_done = lambda s: s == self.terminal_state
             reward = 0.0 if is_done(s) else -1.0
 
             # terminal state
@@ -110,10 +118,10 @@ class GridworldEnv(discrete.DiscreteEnv):
                     ns_right = s + 1 if (s + 1) not in mine else init_state
                     ns_right2 = s + 2 if (s + 2) not in mine else init_state
 
-                P[s][UP] = [(0.44, ns_up, reward, is_done(ns_up)), (0.56, ns_up2, reward, is_done(ns_up2))]
-                P[s][RIGHT] = [(0.06, ns_right, reward, is_done(ns_right)), (0.94, ns_right2, reward, is_done(ns_right2))]
-                P[s][DOWN] = [(0.44, ns_down, reward, is_done(ns_down)), (0.56, ns_down2, reward, is_done(ns_down2))]
-                P[s][LEFT] = [(0.06, ns_left, reward, is_done(ns_left)), (0.94, ns_left2, reward, is_done(ns_left2))]
+                P[s][UP] = [(id_y/100, ns_up, reward, is_done(ns_up)), (1-id_y/100, ns_up2, reward, is_done(ns_up2))]
+                P[s][RIGHT] = [(id_x/100, ns_right, reward, is_done(ns_right)), (1-id_x/100, ns_right2, reward, is_done(ns_right2))]
+                P[s][DOWN] = [(id_y/100, ns_down, reward, is_done(ns_down)), (1-id_y/100, ns_down2, reward, is_done(ns_down2))]
+                P[s][LEFT] = [(id_x/100, ns_left, reward, is_done(ns_left)), (1-id_x/100, ns_left2, reward, is_done(ns_left2))]
 
             it.iternext()
 
@@ -122,8 +130,8 @@ class GridworldEnv(discrete.DiscreteEnv):
 
         self.P = P
 
-        super().__init__(nS, nA, P, isd)
-        self.s = init_state
+        super(GridworldEnv, self).__init__(nS, nA, P, isd)
+        # self.s = init_state
 
     def _render(self, mode='human', close=False):
         """
@@ -150,9 +158,9 @@ class GridworldEnv(discrete.DiscreteEnv):
 
             if self.s == s:
                 output = " x "
-            elif s == 58:
+            elif s == self.terminal_state:
                 output = " T "
-            elif s in [6, 8, 40]:
+            elif s in self.mine:
                 output = " M "
             else:
                 output = " o "

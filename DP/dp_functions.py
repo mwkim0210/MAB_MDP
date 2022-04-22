@@ -65,7 +65,10 @@ def policy_iter(env, policy_eval_fn=policy_eval, discount_factor=1.):
     policy = np.ones([env.nS, env.nA]) / env.nA
     ###
     # RL lecture 5 p.19
-    while True:
+    # while True:
+    for i in range(1000):
+        if i % 100 == 0:
+            print('checkpoint')
         policy_stable = True
         V = policy_eval_fn(policy, env, discount_factor)
         for state in range(env.nS):

@@ -69,14 +69,7 @@ class GridworldEnv(discrete.DiscreteEnv):
             is_done = lambda s: s == self.terminal_state
             reward = 0.0 if is_done(s) else -1.0
 
-            reward_grid = np.array([[0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                                   [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                                   [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                                   [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                                   [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                                   [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                                   [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                                   [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]])
+            # reward_grid = 10 * np.random.rand(8, 10)
 
             """
             reward_grid = np.array([[ -9.59, -10.59,  -8.46, -11.46,  -7.2,  -12.2,   -5.82, -12.82,  -4.31, -13.31],
@@ -89,6 +82,41 @@ class GridworldEnv(discrete.DiscreteEnv):
                                      [ -7.28,  -8.28,  -6.15,  -9.15,  -4.89,  -9.89,  -3.51, -10.51,  -2.,   -11.  ]])
             """
             # reward = reward_grid.reshape([nS, 1])[s]
+            reward_up = np.array([[0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                               [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                               [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                               [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                               [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                               [0., 0., 0., 0., 0., 0., 0., 0., 1., 0.],
+                               [0., 0., 1., 0., 1., 0., 1., 0., 1., 0.],
+                               [1., 0., 1., 0., 1., 0., 1., 0., 1., 0.]])
+
+            reward_right = np.array([[1., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                                   [1., 0., 1., 0., 1., 0., 0., 0., 0., 0.],
+                                   [1., 0., 1., 0., 1., 0., 1., 0., 0., 0.],
+                                   [1., 0., 0., 0., 1., 0., 1., 0., 0., 0.],
+                                   [1., 0., 1., 0., 1., 0., 0., 0., 0., 0.],
+                                   [1., 0., 1., 0., 1., 0., 1., 0., 0., 0.],
+                                   [1., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                                   [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]])
+
+            reward_down = np.array([[0., 0., 1., 0., 1., 0., 1., 1., 1., 1.],
+                                   [0., 0., 0., 0., 0., 0., 1., 0., 1., 0.],
+                                   [0., 0., 0., 0., 0., 0., 0., 0., 1., 0.],
+                                   [0., 0., 1., 0., 0., 0., 0., 0., 1., 0.],
+                                   [0., 1., 0., 0., 0., 0., 1., 0., 1., 0.],
+                                   [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                                   [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                                   [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]])
+
+            reward_left = np.array([[0., 1., 0., 1., 0., 1., 0., 0., 0., 0.],
+                                   [0., 1., 0., 1., 0., 1., 0., 1., 0., 1.],
+                                   [0., 1., 0., 1., 0., 1., 0., 1., 0., 1.],
+                                   [0., 1., 0., 1., 0., 1., 0., 1., 0., 1.],
+                                   [0., 0., 0., 1., 0., 1., 0., 1., 0., 1.],
+                                   [0., 1., 0., 1., 0., 1., 0., 1., 0., 1.],
+                                   [0., 1., 0., 1., 0., 1., 0., 1., 0., 1.],
+                                   [0., 1., 0., 1., 0., 1., 0., 1., 0., 1.]])
 
 
 
@@ -140,11 +168,18 @@ class GridworldEnv(discrete.DiscreteEnv):
                 else:
                     ns_right = s + 1 if (s + 1) not in mine else init_state
                     ns_right2 = s + 2 if (s + 2) not in mine else init_state
+                # Modified reward version, for optimal policy at zero-discount factor
+                P[s][UP] = [(id_y/100, ns_up, reward_up[s//10][s%10], is_done(ns_up)), (1-id_y/100, ns_up2, reward_up[s//10][s%10], is_done(ns_up2))]
+                P[s][RIGHT] = [(id_x/100, ns_right, reward_right[s//10][s%10], is_done(ns_right)), (1-id_x/100, ns_right2, reward_right[s//10][s%10], is_done(ns_right2))]
+                P[s][DOWN] = [(id_y/100, ns_down, reward_down[s//10][s%10], is_done(ns_down)), (1-id_y/100, ns_down2, reward_down[s//10][s%10], is_done(ns_down2))]
+                P[s][LEFT] = [(id_x/100, ns_left, reward_left[s//10][s%10], is_done(ns_left)), (1-id_x/100, ns_left2, reward_left[s//10][s%10], is_done(ns_left2))]
 
+                """  # Original reward version
                 P[s][UP] = [(id_y/100, ns_up, reward, is_done(ns_up)), (1-id_y/100, ns_up2, reward, is_done(ns_up2))]
                 P[s][RIGHT] = [(id_x/100, ns_right, reward, is_done(ns_right)), (1-id_x/100, ns_right2, reward, is_done(ns_right2))]
                 P[s][DOWN] = [(id_y/100, ns_down, reward, is_done(ns_down)), (1-id_y/100, ns_down2, reward, is_done(ns_down2))]
                 P[s][LEFT] = [(id_x/100, ns_left, reward, is_done(ns_left)), (1-id_x/100, ns_left2, reward, is_done(ns_left2))]
+                """
 
             it.iternext()
 

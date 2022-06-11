@@ -6,8 +6,7 @@ import numpy as np
 from config import *
 
 
-NEG_REWARD = -10
-POS_REWARD = 10
+action_limit = 100
 
 
 class Game(object):
@@ -47,6 +46,8 @@ class Game(object):
             self.location[1] -= 1
         elif action == 4:  # flash right
             self.location[1] += 2
+        elif action == 5:  # flash left
+            self.location[1] -= 2
         else:
             raise ValueError(f'Incorrect action value')
 
@@ -66,7 +67,51 @@ class Game(object):
         if self.finished:
             self.reward = self.reward_policy()
 
+        if self.num_actions == action_limit:
+            self.finished = True
+
         return self.return_env(), self.reward, self.finished
+
+    def step_td(self, action):
+        self.num_actions += 1
+        temp = self.location.copy()
+
+        # positive direction: UP, SOUTH, EAST
+        if action == 0:  # go up
+            self.location[0] -= 1
+        elif action == 1:  # down
+            self.location[0] += 1
+        elif action == 2:  # left
+            self.location[1] += 1
+        elif action == 3:  # right
+            self.location[1] -= 1
+        elif action == 4:  # flash right
+            self.location[1] += 2
+        elif action == 5:  # flash left
+            self.location[1] += 2
+        else:
+            raise ValueError(f'Incorrect action value')
+
+        if self.location[0] < 0 or self.location[0] > HEIGHT - 1:
+            self.finished = True
+            self.location = temp
+        if self.location[1] < 0 or self.location[1] > WIDTH - 1:
+            self.finished = True
+            self.location = temp
+        if self.location[1] > WIDTH - 3:  # arrived at target
+            self.finished = True
+        if self.finished is False:
+            if self.grid[self.location[0], self.location[1]] == 1:
+                self.finished = True
+                self.location = temp
+
+        if self.finished:
+            self.reward = self.reward_policy()
+
+        if self.num_actions == action_limit:
+            self.finished = True
+
+        return self.location[1]+WIDTH*self.location[0], self.reward, self.finished
 
     def reward_policy(self):
         reward = 0

@@ -9,47 +9,6 @@ from config import *
 NEG_REWARD = -10
 POS_REWARD = 10
 
-"""
-class Game(object):
-    def __init__(self):
-        self.grid = np.zeros((HEIGHT, LENGTH, WIDTH))
-        self.location = [0, 0, 0]
-        self.finished = False
-
-    def init_game(self):
-        self.grid[HEIGHT//2, :, :] = np.ones((LENGTH, WIDTH))
-        self.grid[HEIGHT//2, LENGTH//2-1:LENGTH//2+1, WIDTH//2-1:WIDTH//2+1] = np.zeros((2, 2))
-
-    def move(self, action):
-        temp = self.location.copy()
-
-        # positive direction: UP, SOUTH, EAST
-        if action == 0:  # go up
-            self.location[0] += 1
-        elif action == 1:  # down
-            self.location[0] -= 1
-        elif action == 2:  # north
-            self.location[1] -= 1
-        elif action == 3:  # south
-            self.location[1] += 1
-        elif action == 4:  # east
-            self.location[2] += 1
-        elif action == 5:  # west
-            self.location[2] -= 1
-        else:
-            raise ValueError(f'Incorrect action value')
-
-        if self.location[0] < 0 or self.location[0] > HEIGHT - 1:
-            self.location = temp
-        if self.location[1] < 0 or self.location[1] > LENGTH - 1:
-            self.location = temp
-        if self.location[2] < 0 or self.location[2] > WIDTH - 1:
-            self.location = temp
-
-    def return_reward(self):
-        pass
-"""
-
 
 class Game(object):
     def __init__(self):
@@ -59,12 +18,15 @@ class Game(object):
         self.target = [HEIGHT-1, WIDTH-1]
         self.reward = 0
 
-    def init_game(self, y=0, x=0):
+    def reset(self):
+        y = random.randint(0, HEIGHT-1)
+        x = random.randint(0, WIDTH//2-2)
         self.location = [y, x]
+        self.grid = np.zeros((HEIGHT, WIDTH))
         self.grid[:, WIDTH//2-1:WIDTH//2+1] = np.ones(())
         self.grid[HEIGHT//2-1:HEIGHT//2+1, WIDTH//2-1:WIDTH//2] = np.zeros(())
 
-    def move(self, action):
+    def step(self, action):
         # temp = self.location.copy()
 
         # positive direction: UP, SOUTH, EAST
@@ -81,22 +43,30 @@ class Game(object):
         else:
             raise ValueError(f'Incorrect action value')
 
-        if self.location[0] < 0 or self.location[0] > HEIGHT - 1:
-            self.finished = True
-            self.reward = NEG_REWARD
-        if self.location[1] < 0 or self.location[1] > WIDTH - 1:
-            self.finished = True
-            self.reward = NEG_REWARD
-        if self.location == self.target:
-            self.finished = True
-            self.reward = POS_REWARD
+        try:
+            if self.location[0] < 0 or self.location[0] > HEIGHT - 1:
+                self.finished = True
+                self.reward = NEG_REWARD
+            if self.location[1] < 0 or self.location[1] > WIDTH - 1:
+                self.finished = True
+                self.reward = NEG_REWARD
+            if self.location == self.target:
+                self.finished = True
+                self.reward = POS_REWARD
+            if self.grid[self.location[0], self.location[1]] == 1:
+                self.finished = True
+                self.reward = NEG_REWARD
+        except Exception:
+            raise Exception(f"{action=} {self.finished=} {self.location[0]=} {self.location[1]=}")
+
+        return self.return_env(), self.reward, self.finished
 
     def return_env(self):
         env = copy.deepcopy(self.grid)
         env[self.location[0], self.location[1]] = 10
         return env
 
-    def print_env(self):
+    def render(self):
         env = self.return_env()
         for i in range(HEIGHT):
             for j in range(WIDTH):
@@ -112,13 +82,15 @@ class Game(object):
 
 def main():
     game = Game()
-    game.init_game(1, 1)
-    game.print_env()
+    game.reset()
+    game.render()
     while not game.finished:
-        action = random.randint()
-        game.move(i)
-        game.print_env()
-    game.init_game()
+        game.render()
+        action = random.randint(0, 4)
+        game.step(action)
+    game.reset()
+    print(game.return_env().shape)
+
     # print(game.grid)
 
 

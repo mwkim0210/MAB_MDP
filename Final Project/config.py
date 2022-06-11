@@ -1,5 +1,5 @@
-WIDTH = 9
-HEIGHT = 8
+WIDTH = 16
+HEIGHT = 16
 """
 Action
 0: up

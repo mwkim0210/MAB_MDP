@@ -11,7 +11,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class DQN(nn.Module):
 
-    def __init__(self, h, w, outputs):
+    def __init__(self, h, w, outputs=6):
         super(DQN, self).__init__()
 
         self.conv1 = nn.Conv2d(1, 4, kernel_size=3, stride=1, padding=1)
@@ -26,7 +26,6 @@ class DQN(nn.Module):
         convw = conv2d_size_out(conv2d_size_out(conv2d_size_out(w)))
         convh = conv2d_size_out(conv2d_size_out(conv2d_size_out(h)))
         linear_input_size = convw * convh * 16
-        print(f"{convw=} {convh=} {linear_input_size=}")
         self.head = nn.Linear(linear_input_size, outputs)
 
     def forward(self, x):
@@ -41,7 +40,7 @@ class DQN(nn.Module):
 
 class LargerDQN(nn.Module):
 
-    def __init__(self, h, w, outputs=5):
+    def __init__(self, h, w, outputs=6):
         super(LargerDQN, self).__init__()
 
         self.relu = nn.ReLU(inplace=True)
@@ -64,7 +63,7 @@ class LargerDQN(nn.Module):
         self.fc2 = nn.Linear(4096, 4096)
         self.dropout2 = nn.Dropout()
 
-        self.fc3 = nn.Linear(4096, 5)
+        self.fc3 = nn.Linear(4096, outputs)
 
     def forward(self, x):
         x = x.to(device)
@@ -90,12 +89,12 @@ class LargerDQN(nn.Module):
 
 
 def main():
-    model_test = DQN(HEIGHT, WIDTH, 5)
+    model_test = DQN(HEIGHT, WIDTH, 6)
     x = torch.randn((1, 1, HEIGHT, WIDTH))
     out = model_test(x)
     print(f"Output shape is: {out.shape}")
 
-    large_model = LargerDQN(HEIGHT, WIDTH, 5)
+    large_model = LargerDQN(HEIGHT, WIDTH, 6)
     x2 = torch.randn((1, 1, HEIGHT, WIDTH))
     out = large_model(x2)
 

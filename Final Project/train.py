@@ -9,7 +9,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from network import DQN
+from network import DQN, LargerDQN
 from memory import ReplayMemory, Transition
 from env import Game
 from config import *
@@ -22,8 +22,8 @@ EPS_END = 0.05
 EPS_DECAY = 200
 TARGET_UPDATE = 10
 buffer = 1000
-n_actions = 5
-num_episodes = 50
+n_actions = 6
+num_episodes = 100
 learning_rate = 0.0001
 
 """
@@ -34,9 +34,15 @@ state_dict = checkpoint['net']
 
 env = Game()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-policy_net = DQN(HEIGHT, WIDTH, n_actions).to(device)
+
+# policy_net = DQN(HEIGHT, WIDTH, n_actions).to(device)
+policy_net = LargerDQN(HEIGHT, WIDTH, n_actions).to(device)
+
 # policy_net.load_state_dict(state_dict)
-target_net = DQN(HEIGHT, WIDTH, n_actions).to(device)
+
+# target_net = DQN(HEIGHT, WIDTH, n_actions).to(device)
+target_net = LargerDQN(HEIGHT, WIDTH, n_actions).to(device)
+
 
 # load network parameters of policy network
 target_net.load_state_dict(policy_net.state_dict())
@@ -81,20 +87,20 @@ final_location = []
 def plot_locations():
     plt.figure(1)
     plt.clf()
-    location_t = torch.tensor(final_location, dtype=torch.float)
+    locations_t = torch.tensor(final_location, dtype=torch.float)
     plt.title('Location (x)')
     plt.xlabel('Episode')
     plt.ylabel('Location (x)')
-    plt.plot(location_t.numpy())
+    plt.plot(locations_t.numpy())
     # plot average of 100 episodes
-    if len(location_t) >= 100:
-        means = reward_list.unfold(0, 100, 1).mean(1).view(-1)
+    if len(locations_t) >= 100:
+        means = locations_t.unfold(0, 100, 1).mean(1).view(-1)
         means = torch.cat((torch.zeros(99), means))
         plt.plot(means.numpy())
 
     plt.pause(0.001)  # stop to update plot
 
-    return location_t
+    return locations_t
 
 
 def plot_rewards():
@@ -107,7 +113,7 @@ def plot_rewards():
     plt.plot(rewards_t.numpy())
     # plot average of 100 episodes
     if len(rewards_t) >= 100:
-        means = reward_list.unfold(0, 100, 1).mean(1).view(-1)
+        means = rewards_t.unfold(0, 100, 1).mean(1).view(-1)
         means = torch.cat((torch.zeros(99), means))
         plt.plot(means.numpy())
 
@@ -226,7 +232,7 @@ for i_episode in range(num_episodes):
     if i_episode % TARGET_UPDATE == 0:
         target_net.load_state_dict(policy_net.state_dict())
 
-    if i_episode % 50 == 0:
+    if i_episode % 10 == 0:
         print(f"{i_episode:<4} {reward.item()}")
 
     # (episode 한번에 대한) 전체 for문 1회 종료.

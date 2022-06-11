@@ -1,6 +1,8 @@
+import os
 import random
 import math
 from itertools import count
+from datetime import datetime
 
 import matplotlib.pyplot as plt
 import torch
@@ -22,20 +24,38 @@ TARGET_UPDATE = 10
 buffer = 1000
 n_actions = 5
 num_episodes = 50
+learning_rate = 0.0001
+
+"""
+model_path = './save/insert_file_name'
+checkpoint = torch.load(model_path, device)
+state_dict = checkpoint['net']
+"""
 
 env = Game()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 policy_net = DQN(HEIGHT, WIDTH, n_actions).to(device)
+# policy_net.load_state_dict(state_dict)
 target_net = DQN(HEIGHT, WIDTH, n_actions).to(device)
 
 # load network parameters of policy network
 target_net.load_state_dict(policy_net.state_dict())
 target_net.eval()
 
-optimizer = optim.RMSprop(policy_net.parameters())
+# optimizer = optim.RMSprop(policy_net.parameters())
+optimizer = optim.Adam(policy_net.parameters(), lr=learning_rate)
 
 memory = ReplayMemory(buffer)
 steps_done = 0
+
+def save_model(model, save_dir):
+    os.makedirs(save_dir, exist_ok=True)
+    checkpoint = {
+        'net': model.state_dict()
+    }
+    file_name = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    output_path = os.path.join(save_dir, file_name)
+    torch.save(checkpoint, output_path)
 
 
 def select_action(state):
@@ -54,13 +74,53 @@ def select_action(state):
 
 
 episode_durations = []
+reward_list = []
+final_location = []
+
+
+def plot_locations():
+    plt.figure(1)
+    plt.clf()
+    location_t = torch.tensor(final_location, dtype=torch.float)
+    plt.title('Location (x)')
+    plt.xlabel('Episode')
+    plt.ylabel('Location (x)')
+    plt.plot(location_t.numpy())
+    # plot average of 100 episodes
+    if len(location_t) >= 100:
+        means = reward_list.unfold(0, 100, 1).mean(1).view(-1)
+        means = torch.cat((torch.zeros(99), means))
+        plt.plot(means.numpy())
+
+    plt.pause(0.001)  # stop to update plot
+
+    return location_t
+
+
+def plot_rewards():
+    plt.figure(2)
+    plt.clf()
+    rewards_t = torch.tensor(reward_list, dtype=torch.float)
+    plt.title('Reward')
+    plt.xlabel('Episode')
+    plt.ylabel('reward')
+    plt.plot(rewards_t.numpy())
+    # plot average of 100 episodes
+    if len(rewards_t) >= 100:
+        means = reward_list.unfold(0, 100, 1).mean(1).view(-1)
+        means = torch.cat((torch.zeros(99), means))
+        plt.plot(means.numpy())
+
+    plt.pause(0.001)  # stop to update plot
+
+    return rewards_t
 
 
 def plot_durations():
-    plt.figure(2)
+    plt.figure(3)
     plt.clf()
     durations_t = torch.tensor(episode_durations, dtype=torch.float)
-    plt.title('Training...')
+    plt.title('Duration')
     plt.xlabel('Episode')
     plt.ylabel('Duration')
     plt.plot(durations_t.numpy())
@@ -71,6 +131,8 @@ def plot_durations():
         plt.plot(means.numpy())
 
     plt.pause(0.001)  # stop to update plot
+
+    return durations_t
 
 
 def optimize_model():
@@ -83,7 +145,7 @@ def optimize_model():
     batch = Transition(*zip(*transitions))
     non_final_mask = torch.tensor(tuple(map(lambda s: s is not None,
                                             batch.next_state)), device=device, dtype=torch.bool)
-    non_final_next_states = torch.cat([s for s in batch.next_state
+    non_final_next_states = torch.cat([torch.from_numpy(s) for s in batch.next_state
                                        if s is not None])
 
     state_batch = torch.cat(batch.state)
@@ -98,7 +160,9 @@ def optimize_model():
 
     expected_state_action_values = (next_state_values * GAMMA) + reward_batch
 
-    criterion = nn.SmoothL1Loss()
+    # criterion = nn.SmoothL1Loss()
+    criterion = nn.MSELoss()
+
     loss = criterion(state_action_values, expected_state_action_values.unsqueeze(1))
 
     optimizer.zero_grad()
@@ -150,7 +214,11 @@ for i_episode in range(num_episodes):
         if done:
             # 하나의 episode가 몇 번 진행 되었는지 counting 하는 line
             episode_durations.append(t + 1)
-            plot_durations()
+            reward_list.append(reward)
+            final_location.append(env.location[1])
+            # plot_durations()
+            # plot_rewards()
+            # plot_locations()
             # plt.show()
             break
 
@@ -158,12 +226,25 @@ for i_episode in range(num_episodes):
     if i_episode % TARGET_UPDATE == 0:
         target_net.load_state_dict(policy_net.state_dict())
 
+    if i_episode % 50 == 0:
+        print(f"{i_episode:<4} {reward.item()}")
+
     # (episode 한번에 대한) 전체 for문 1회 종료.
 
 # 학습 마무리.
 print('Complete')
-env.render()
-plt.ioff()
+# env.render()
+# plt.ioff()
+
+save_dir = './save'
+save_model(policy_net, save_dir)
+
+rewards_t = plot_rewards()
+durations_t = plot_durations()
+locations_t = plot_locations()
+print(f"{torch.mean(rewards_t[num_episodes - 5:num_episodes])=}")
+print(f"{torch.mean(durations_t[num_episodes - 5:num_episodes])=}")
+print(f"{torch.mean(locations_t[num_episodes - 5:num_episodes])=}")
 plt.show()
 
 

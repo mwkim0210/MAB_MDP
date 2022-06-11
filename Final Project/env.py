@@ -17,17 +17,24 @@ class Game(object):
         self.finished = False
         self.target = [HEIGHT-1, WIDTH-1]
         self.reward = 0
+        self.num_actions = 0
 
     def reset(self):
+        self.finished = False
+        self.reward = 0
+        self.num_actions = 0
+
         y = random.randint(0, HEIGHT-1)
         x = random.randint(0, WIDTH//2-2)
+        # x, y = 1, 1
         self.location = [y, x]
         self.grid = np.zeros((HEIGHT, WIDTH))
         self.grid[:, WIDTH//2-1:WIDTH//2+1] = np.ones(())
-        self.grid[HEIGHT//2-1:HEIGHT//2+1, WIDTH//2-1:WIDTH//2] = np.zeros(())
+        self.grid[HEIGHT//2-2:HEIGHT//2+2, WIDTH//2-1:WIDTH//2] = np.zeros(())
 
     def step(self, action):
-        # temp = self.location.copy()
+        self.num_actions += 1
+        temp = self.location.copy()
 
         # positive direction: UP, SOUTH, EAST
         if action == 0:  # go up
@@ -43,23 +50,34 @@ class Game(object):
         else:
             raise ValueError(f'Incorrect action value')
 
-        try:
-            if self.location[0] < 0 or self.location[0] > HEIGHT - 1:
-                self.finished = True
-                self.reward = NEG_REWARD
-            if self.location[1] < 0 or self.location[1] > WIDTH - 1:
-                self.finished = True
-                self.reward = NEG_REWARD
-            if self.location == self.target:
-                self.finished = True
-                self.reward = POS_REWARD
+        if self.location[0] < 0 or self.location[0] > HEIGHT - 1:
+            self.finished = True
+            self.location = temp
+        if self.location[1] < 0 or self.location[1] > WIDTH - 1:
+            self.finished = True
+            self.location = temp
+        if self.location[1] > WIDTH - 3:  # arrived at target
+            self.finished = True
+        if self.finished is False:
             if self.grid[self.location[0], self.location[1]] == 1:
                 self.finished = True
-                self.reward = NEG_REWARD
-        except Exception:
-            raise Exception(f"{action=} {self.finished=} {self.location[0]=} {self.location[1]=}")
+                self.location = temp
+
+        if self.finished:
+            self.reward = self.reward_policy()
 
         return self.return_env(), self.reward, self.finished
+
+    def reward_policy(self):
+        reward = 0
+        reward += self.location[1]
+        if self.location[1] > WIDTH//2:
+            reward += self.location[1]
+
+        if self.grid[self.location[0], self.location[1]] == 1:
+            reward -= 100
+        reward -= self.num_actions
+        return reward
 
     def return_env(self):
         env = copy.deepcopy(self.grid)
@@ -79,17 +97,30 @@ class Game(object):
             print("")
         print("")
 
+    def _print_reward_policy(self):
+        reward = 0
+        self.finished = True
+        for i in range(HEIGHT):
+            for j in range(WIDTH):
+                self.reward = 0
+                self.location = [i, j]
+                reward = self.reward_policy()
+                print(f"{reward:>4}", end="")
+            print("")
+
 
 def main():
     game = Game()
     game.reset()
     game.render()
+    """
     while not game.finished:
         game.render()
         action = random.randint(0, 4)
         game.step(action)
+    """
     game.reset()
-    print(game.return_env().shape)
+    game._print_reward_policy()
 
     # print(game.grid)
 

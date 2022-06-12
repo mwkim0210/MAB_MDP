@@ -11,7 +11,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class DQN(nn.Module):
 
-    def __init__(self, h, w, outputs=6):
+    def __init__(self, h, w, outputs=8):
         super(DQN, self).__init__()
 
         self.conv1 = nn.Conv2d(1, 4, kernel_size=3, stride=1, padding=1)
@@ -40,7 +40,7 @@ class DQN(nn.Module):
 
 class LargerDQN(nn.Module):
 
-    def __init__(self, h, w, outputs=6):
+    def __init__(self, h, w, outputs=8):
         super(LargerDQN, self).__init__()
 
         self.relu = nn.ReLU(inplace=True)
@@ -89,12 +89,16 @@ class LargerDQN(nn.Module):
 
 
 def main():
-    model_test = DQN(HEIGHT, WIDTH, 6)
+    import torch
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model_test = DQN(HEIGHT, WIDTH, 8)
+    model_test.to(device)
     x = torch.randn((1, 1, HEIGHT, WIDTH))
     out = model_test(x)
     print(f"Output shape is: {out.shape}")
 
-    large_model = LargerDQN(HEIGHT, WIDTH, 6)
+    large_model = LargerDQN(HEIGHT, WIDTH, 8)
+    large_model.to(device)
     x2 = torch.randn((1, 1, HEIGHT, WIDTH))
     out = large_model(x2)
 

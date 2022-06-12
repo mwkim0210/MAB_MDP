@@ -14,16 +14,18 @@ from memory import ReplayMemory, Transition
 from env import Game
 from config import *
 
+
 BATCH_SIZE = 128
 GAMMA = 0.999
 EPS_START = 0.9
-EPS_END = 0.05
-EPS_DECAY = 200
-TARGET_UPDATE = 10
-buffer = 1000
-n_actions = 6
-num_episodes = 500
+EPS_END = 0.15
+EPS_DECAY = 1000
+TARGET_UPDATE = 100
+buffer = 2000
+n_actions = 8
+num_episodes = 1000
 learning_rate = 0.0003
+lr_step = 2500
 
 """
 model_path = './save/insert_file_name'
@@ -42,17 +44,17 @@ policy_net = LargerDQN(HEIGHT, WIDTH, n_actions).to(device)
 # target_net = DQN(HEIGHT, WIDTH, n_actions).to(device)
 target_net = LargerDQN(HEIGHT, WIDTH, n_actions).to(device)
 
+
 # load network parameters of policy network
 target_net.load_state_dict(policy_net.state_dict())
 target_net.eval()
 
 # optimizer = optim.RMSprop(policy_net.parameters())
 optimizer = optim.Adam(policy_net.parameters(), lr=learning_rate)
-optimizer2 = optim.Adam(policy_net.parameters(), lr=learning_rate / 2)
+optimizer2 = optim.Adam(policy_net.parameters(), lr=learning_rate/3)
 
 memory = ReplayMemory(buffer)
 steps_done = 0
-
 
 def save_model(model, save_dir):
     os.makedirs(save_dir, exist_ok=True)
@@ -68,7 +70,7 @@ def select_action(state):
     global steps_done
     sample = random.random()
     eps_threshold = EPS_END + (EPS_START - EPS_END) * \
-                    math.exp(-1. * steps_done / EPS_DECAY)
+    math.exp(-1. * steps_done / EPS_DECAY)
     steps_done += 1
 
     if sample > eps_threshold:
@@ -76,7 +78,7 @@ def select_action(state):
             return policy_net(state).max(1)[1].view(1, 1)
     else:
         return torch.tensor([[random.randrange(n_actions)]], device=device, \
-                            dtype=torch.long)
+        dtype=torch.long)
 
 
 episode_durations = []
@@ -99,7 +101,7 @@ def plot_locations():
         plt.plot(means.numpy())
 
     # plt.pause(0.001)  # stop to update plot
-    plt.savefig('./save/locations_' + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.png')
+    plt.savefig('./save/locations_'+datetime.now().strftime("%Y_%m_%d_%H_%M_%S")+'.png')
     return locations_t
 
 
@@ -118,7 +120,7 @@ def plot_rewards():
         plt.plot(means.numpy())
 
     # plt.pause(0.001)  # stop to update plot
-    plt.savefig('./save/rewards_' + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.png')
+    plt.savefig('./save/rewards_'+datetime.now().strftime("%Y_%m_%d_%H_%M_%S")+'.png')
     return rewards_t
 
 
@@ -137,7 +139,7 @@ def plot_durations():
         plt.plot(means.numpy())
 
     # plt.pause(0.001)  # stop to update plot
-    plt.savefig('./save/durations_' + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.png')
+    plt.savefig('./save/durations_'+datetime.now().strftime("%Y_%m_%d_%H_%M_%S")+'.png')
     return durations_t
 
 
@@ -170,15 +172,15 @@ def optimize_model(episode):
     criterion = nn.MSELoss()
 
     loss = criterion(state_action_values, expected_state_action_values.unsqueeze(1))
-
-    if episode < 150:
+    
+    if episode < lr_step:
         optimizer.zero_grad()
     else:
         optimizer2.zero_grad()
     loss.backward()
     for param in policy_net.parameters():
         param.grad.data.clamp_(-1, 1)
-    if episode < 150:
+    if episode <  lr_step:
         optimizer.step()
     else:
         optimizer2.step()
@@ -219,8 +221,6 @@ for i_episode in range(num_episodes):
         # 다음 상태로 이동
         state = next_state
 
-        # (policy network에서) 최적화 한단계 수행
-        optimize_model(i_episode)
 
         # 마찬가지로 done이 True 라면,
         if done:
@@ -235,11 +235,12 @@ for i_episode in range(num_episodes):
             break
 
     # TARGET_UPDATE 마다 target network의 parameter를 update 한다.
+    optimize_model(i_episode)
     if i_episode % TARGET_UPDATE == 0:
         target_net.load_state_dict(policy_net.state_dict())
 
     if i_episode % 10 == 0:
-        print(f"{i_episode:<4} {reward.item()}")
+        print(f"{i_episode:<4} {env.location=}")
 
     # (episode 한번에 대한) 전체 for문 1회 종료.
 
@@ -258,6 +259,7 @@ print(f"{torch.mean(rewards_t[num_episodes - 5:num_episodes])=}")
 print(f"{torch.mean(durations_t[num_episodes - 5:num_episodes])=}")
 print(f"{torch.mean(locations_t[num_episodes - 5:num_episodes])=}")
 plt.show()
+
 
 if __name__ == '__main__':
     # main()

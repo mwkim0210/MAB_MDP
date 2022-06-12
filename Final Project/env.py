@@ -6,7 +6,7 @@ import numpy as np
 from config import *
 
 
-action_limit = 100
+action_limit = 500
 
 
 class Game(object):
@@ -28,7 +28,7 @@ class Game(object):
         # x, y = 1, 1
         self.location = [y, x]
         self.grid = np.zeros((HEIGHT, WIDTH))
-        self.grid[:, WIDTH//2-1:WIDTH//2] = np.ones(())
+        self.grid[:, WIDTH//2-1:WIDTH//2+1] = np.ones(())
         self.grid[HEIGHT//2-2:HEIGHT//2+2, WIDTH//2-1:WIDTH//2] = np.zeros(())
 
     def step(self, action):
@@ -48,6 +48,10 @@ class Game(object):
             self.location[1] += 2
         elif action == 5:  # flash left
             self.location[1] -= 2
+        elif action == 6:  # flash up
+            self.location[0] -= 2
+        elif action == 7:  # flash down
+            self.location[0] += 2
         else:
             raise ValueError(f'Incorrect action value')
 
@@ -115,13 +119,19 @@ class Game(object):
 
     def reward_policy(self):
         reward = 0
+        if self.location[1] < WIDTH//2:
+            reward += 16 - abs(8-self.location[0]) - abs(8-self.location[1])
         reward += self.location[1]
         if self.location[1] > WIDTH//2:
-            reward += 2 * self.location[1]
+            reward += 10 * self.location[1]
 
         if self.grid[self.location[0], self.location[1]] == 1:
-            reward -= 100
+            reward -= 50
         # reward -= self.num_actions
+
+        # if self.location[1] < WIDTH//2:
+        #     reward += 8 - abs(HEIGHT//2 - self.location[0])
+
         return reward
 
     def return_env(self):

@@ -28,7 +28,7 @@ class Game(object):
         # x, y = 1, 1
         self.location = [y, x]
         self.grid = np.zeros((HEIGHT, WIDTH))
-        self.grid[:, WIDTH//2-1:WIDTH//2+1] = np.ones(())
+        self.grid[:, WIDTH//2-1:WIDTH//2] = np.ones(())
         self.grid[HEIGHT//2-2:HEIGHT//2+2, WIDTH//2-1:WIDTH//2] = np.zeros(())
 
     def step(self, action):
@@ -117,11 +117,11 @@ class Game(object):
         reward = 0
         reward += self.location[1]
         if self.location[1] > WIDTH//2:
-            reward += self.location[1]
+            reward += 2 * self.location[1]
 
         if self.grid[self.location[0], self.location[1]] == 1:
             reward -= 100
-        reward -= self.num_actions
+        # reward -= self.num_actions
         return reward
 
     def return_env(self):
